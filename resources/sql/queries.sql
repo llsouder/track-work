@@ -15,6 +15,10 @@ WHERE id = :id
 SELECT * FROM users
 WHERE id = :id
 
+-- :name get-users :?
+-- :doc retrieves all user records
+SELECT * FROM users
+
 -- :name delete-user! :! :n
 -- :doc deletes a user record given the id
 DELETE FROM users

@@ -22,6 +22,7 @@
                  [markdown-clj "1.0.3"]
                  [metosin/muuntaja "0.6.1"]
                  [metosin/ring-http-response "0.9.0"]
+                 [metosin/compojure-api "1.1.11"]
                  [mount "0.1.13"]
                  [nrepl "0.4.5"]
                  [org.clojure/clojure "1.9.0"]

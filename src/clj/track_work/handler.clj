@@ -2,6 +2,7 @@
   (:require [track-work.middleware :as middleware]
             [track-work.layout :refer [error-page]]
             [track-work.routes.home :refer [home-routes]]
+            [track-work.routes.rest :refer [rest-routes]]
             [compojure.core :refer [routes wrap-routes]]
             [ring.util.http-response :as response]
             [compojure.route :as route]
@@ -17,6 +18,9 @@
   (middleware/wrap-base
     (routes
       (-> #'home-routes
+          (wrap-routes middleware/wrap-csrf)
+          (wrap-routes middleware/wrap-formats))
+      (-> #'rest-routes
           (wrap-routes middleware/wrap-csrf)
           (wrap-routes middleware/wrap-formats))
       (route/not-found

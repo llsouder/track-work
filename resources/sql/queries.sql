@@ -23,3 +23,13 @@ SELECT * FROM users
 -- :doc deletes a user record given the id
 DELETE FROM users
 WHERE id = :id
+
+-- :name get-timetypes :?
+-- :doc retrieves all timetype records
+SELECT * FROM timetypes
+
+-- :name create-timetype! :! :n
+-- :doc creates a new timetype record
+INSERT INTO timetypes
+(name, description)
+VALUES (:name, :description)

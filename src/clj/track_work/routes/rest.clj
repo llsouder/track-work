@@ -13,19 +13,19 @@
               (response/ok {:pong "ping"}))))
 (def get-users
   (sweet/api
-   (sweet/GET "/get-users" []
+   (sweet/GET "/get_users" []
               (response/ok (do
                              (println "hello")
                              (db/get-users))))))
 
 (def get-timetypes
   (sweet/api
-   (sweet/GET "/get-timetypes" []
+   (sweet/GET "/get_types" []
               (response/ok (db/get-timetypes)))))
 
 (def add-time-type
   (sweet/api
-   (sweet/POST "/add-type" [name description]
+   (sweet/POST "/add_type" [name description]
                (response/ok
                 (do
                   (println (str "echo! " name))

@@ -7,6 +7,7 @@
             [markdown.core :refer [md->html]]
             [track-work.ajax :as ajax]
             [track-work.events]
+            [track-work.timetypes :as timetypes]
             [secretary.core :as secretary])
   (:import goog.History))
 
@@ -33,7 +34,13 @@
      [b/Collapse {:is-open @expanded? :navbar true}
       [b/Nav {:class-name "mr-auto" :navbar true}
        [nav-link "#/" "Home" :home]
+       [nav-link "#/types" "Time Types" :types]
        [nav-link "#/about" "About" :about]]]]))
+
+(defn types-page []
+  [:div.container
+   [:div.row>div.col-sm-12
+    (timetypes/page)]])
 
 (defn about-page []
   [:div.container
@@ -52,6 +59,7 @@
 
 (def pages
   {:home #'home-page
+   :types #'types-page
    :about #'about-page})
 
 (defn page []
@@ -66,6 +74,9 @@
 
 (secretary/defroute "/" []
   (rf/dispatch [:navigate :home]))
+
+(secretary/defroute "/types" []
+  (rf/dispatch [:navigate :types]))
 
 (secretary/defroute "/about" []
   (rf/dispatch [:navigate :about]))

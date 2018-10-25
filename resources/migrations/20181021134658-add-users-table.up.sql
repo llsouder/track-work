@@ -7,6 +7,7 @@ CREATE TABLE users
  last_login TIMESTAMP,
  is_active BOOLEAN,
  pass VARCHAR(300));
-
+--;;
 insert into users (id, first_name, last_name) values (1, 'Super', 'Man');
+--;;
 insert into users (id, first_name, last_name) values (2, 'Bat', 'Man');

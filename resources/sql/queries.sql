@@ -26,10 +26,10 @@ WHERE id = :id
 
 -- :name get-timetypes :?
 -- :doc retrieves all timetype records
-SELECT * FROM timetypes
+SELECT * FROM time_types
 
 -- :name create-timetype! :! :n
 -- :doc creates a new timetype record
-INSERT INTO timetypes
-(name, description)
-VALUES (:name, :description)
+INSERT INTO time_types
+(time_type, description)
+VALUES (:time_type, :description)

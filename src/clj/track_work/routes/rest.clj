@@ -25,12 +25,14 @@
 
 (def add-time-type
   (sweet/api
-   (sweet/POST "/add_type" [name description]
+   (sweet/POST "/add_type" [] 
+               :query-params [time_type :- String
+                              description :- String]
                (response/ok
                 (do
-                  (println (str "echo! " name))
-                  (db/create-timetype! {:name name :description description})
-                  name)))))
+                  (println (str "echo! " "\"" time_type "\"" description))
+                  (db/create-timetype! {:time_type time_type :description description})
+                  time_type)))))
 
 (defroutes rest-routes
   get-users

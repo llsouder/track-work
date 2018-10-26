@@ -1,1 +1,1 @@
-DROP TABLE timetypes;
+DROP TABLE time_types;

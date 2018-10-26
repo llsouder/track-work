@@ -1,6 +1,6 @@
-CREATE TABLE timetypes
+CREATE TABLE time_types
 (id SERIAL PRIMARY KEY,
- name VARCHAR(30),
+ time_type VARCHAR(30),
  description VARCHAR(30) );
 --;;
-insert into timetypes (name, description) values ('TGF', 'The main task.');
+insert into time_types (time_type, description) values ('TGF', 'The main task.');

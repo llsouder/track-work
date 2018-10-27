@@ -3,6 +3,7 @@
             [track-work.layout :refer [error-page]]
             [track-work.routes.home :refer [home-routes]]
             [track-work.routes.rest :refer [rest-routes]]
+            [track-work.routes.services :refer [service-routes]]
             [compojure.core :refer [routes wrap-routes]]
             [ring.util.http-response :as response]
             [compojure.route :as route]
@@ -20,9 +21,7 @@
       (-> #'home-routes
           (wrap-routes middleware/wrap-csrf)
           (wrap-routes middleware/wrap-formats))
-      (-> #'rest-routes
-          (wrap-routes middleware/wrap-csrf)
-          (wrap-routes middleware/wrap-formats))
+      #'service-routes
       (route/not-found
         (:body
           (error-page {:status 404

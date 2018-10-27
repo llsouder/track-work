@@ -2,7 +2,6 @@
   (:require [track-work.middleware :as middleware]
             [track-work.layout :refer [error-page]]
             [track-work.routes.home :refer [home-routes]]
-            [track-work.routes.rest :refer [rest-routes]]
             [track-work.routes.services :refer [service-routes]]
             [compojure.core :refer [routes wrap-routes]]
             [ring.util.http-response :as response]

@@ -5,6 +5,12 @@
             [track-work.db.core :as db]
             [clojure.xml :as xml]))
 
+(s/defschema TimeType {:timetype String
+                       :description String})
+
+(defn create-timetype! [timetype]
+  (db/create-timetype! {:time_type (:timetype timetype)
+                        :description (:description timetype)}))
 (defapi service-routes
   {:swagger
    {:ui "/swagger-ui"
@@ -15,8 +21,9 @@
      (ok (db/get-timetypes)))
 
    (POST "/add_type" []
-         :query-params [time_type :- String
-                        description :- String]
-         (ok (db/create-timetype! {:time_type time_type
-                                  :description description})
-            time_type))))
+         :return TimeType
+         :body [timetype TimeType]
+         :summary "This is suppose to add a new time type."
+         (do
+          (create-timetype! timetype)
+          (ok timetype)))))

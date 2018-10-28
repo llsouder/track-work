@@ -26,7 +26,7 @@
 
 (defn type-form []
   [:div
-   [:form
+   [:form {:id "timetypeform"}
     "Time Type:" [:br]
     [:input {:id "timetype"
              :name "timetype"
@@ -47,10 +47,9 @@
 (defn set-types! [response]
   (reset! timetypes response))
 
-
 (defn get-types []
-  (println "getting the types")
-  (ajax/GET "/get_types" {:handler set-types!
+  (println "get-types")
+  (ajax/GET "/api/get_types" {:handler set-types!
                           :response-format :json
                           :keywords? true}))
 
@@ -59,11 +58,11 @@
   (if (string/blank? timetype )
     (error)
     (do
-      (println (str "POST " timetype " " description))
-      (ajax/POST "add_type"
-                {:params {:time_type timetype
-                          :description description}
-                 :handler get-types})))
+      (ajax/POST "/api/add_type"
+        {:params {:timetype timetype
+                :description description}
+         :format :json
+         :handler get-types})))
   db)
 
 (rf/reg-event-db :add-type-click handle-add-type)

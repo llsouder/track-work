@@ -7,6 +7,7 @@
             [markdown.core :refer [md->html]]
             [track-work.ajax :as ajax]
             [track-work.events]
+            [track-work.logtime :as logtime]
             [track-work.timetypes :as timetypes]
             [secretary.core :as secretary])
   (:import goog.History))
@@ -50,12 +51,7 @@
 
 (defn home-page []
   [:div.container
-   [:div.row>div.col-sm-12
-    [:h2.alert.alert-info "Tip: try pressing CTRL+H to open re-frame tracing menu"]]
-   (when-let [docs @(rf/subscribe [:docs])]
-     [:div.row>div.col-sm-12
-      [:div {:dangerouslySetInnerHTML
-             {:__html (md->html docs)}}]])])
+   [logtime/mainpanel]])
 
 (def pages
   {:home #'home-page

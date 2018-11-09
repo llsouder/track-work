@@ -13,6 +13,11 @@
   (fn [db [_ docs]]
     (assoc db :docs docs)))
 
+(rf/reg-event-db
+ :set-user-id
+ (fn [db [_ user_id]]
+   (assoc db :user_id user_id)))
+
 (rf/reg-event-fx
   :fetch-docs
   (fn [_ _]
@@ -41,3 +46,8 @@
   :common/error
   (fn [db _]
     (:common/error db)))
+
+(rf/reg-sub
+ :user_id
+ (fn [db _]
+   (:user_id db)))

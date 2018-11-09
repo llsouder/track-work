@@ -96,6 +96,7 @@
 
 (defn init! []
   (rf/dispatch-sync [:navigate :home])
+  (rf/dispatch-sync [:set-user-id 1])
   (ajax/load-interceptors!)
   (rf/dispatch [:fetch-docs])
   (hook-browser-navigation!)

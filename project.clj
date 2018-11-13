@@ -92,7 +92,7 @@
 
    :project/dev  {:jvm-opts ["-Dconf=dev-config.edn"]
                   :dependencies [[binaryage/devtools "0.9.10"]
-                                 [cider/piggieback "0.3.9"]
+                                 [cider/piggieback "0.3.10"]
                                  [day8.re-frame/re-frame-10x "0.3.3-react16"]
                                  [doo "0.1.10"]
                                  [expound "0.7.1"]
@@ -125,7 +125,8 @@
                   :doo {:build "test"}
                   :source-paths ["env/dev/clj"]
                   :resource-paths ["env/dev/resources"]
-                  :repl-options {:init-ns user}
+                  :repl-options {:init-ns user
+                                 :nrepl-middleware [cider.piggieback/wrap-cljs-repl]}
                   :injections [(require 'pjstadig.humane-test-output)
                                (pjstadig.humane-test-output/activate!)]}
    :project/test {:jvm-opts ["-Dconf=test-config.edn"]

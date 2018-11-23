@@ -46,3 +46,36 @@ VALUES (:user_id, :click_time, :note)
 ON CONFLICT (user_id) DO UPDATE 
   SET click_time = excluded.click_time,
       note = excluded.note;
+
+-- :name get-projects :? :*
+-- :doc get all of the users projects
+SELECT * FROM projects
+WHERE user_id = :user_id
+
+-- :name create-project! :! :n
+-- :doc creates a new project record
+INSERT INTO projects
+(user_id, proj_desc)
+VALUES (:user_id, :proj_desc)
+
+-- :name get-tasks :? :*
+-- :doc get all of the tasks for a project
+SELECT * FROM tasks
+WHERE proj_id = :proj_id
+
+-- :name create-task! :! :n
+-- :doc creates a new task record
+INSERT INTO tasks
+(proj_id, task_desc)
+VALUES (:proj_id, :task_desc)
+
+-- :name get-bubbles :? :*
+-- :doc get all of the bubbles for a task
+SELECT * FROM bubbles
+WHERE task_id = :task_id
+
+-- :name create-bubble! :! :*
+-- :doc creates a new task record
+INSERT INTO bubbles
+(task_id)
+VALUES (:task_id)

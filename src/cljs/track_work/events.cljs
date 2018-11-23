@@ -18,6 +18,11 @@
  (fn [db [_ user_id]]
    (assoc db :user_id user_id)))
 
+(rf/reg-event-db
+ :set-time-types
+ (fn [db [_ time-types]]
+   (assoc db :time-types time-types)))
+
 (rf/reg-event-fx
   :fetch-docs
   (fn [_ _]

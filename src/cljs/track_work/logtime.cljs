@@ -16,7 +16,6 @@
 
 (defn get-user-state
   [id]
-  (println "get-user " id)
   (let [url (str "/api/get_user_state/" id)]
     (ajax/GET url
             {:handler #(rf/dispatch
@@ -34,28 +33,34 @@
                             [:change-note (-> % .-target .-value)])}])))
 
 (defn update-state!
-  [{:keys [user_id note]}]
+  [{:keys [user_id note] :as db} _]
+  (println "post malone: " user_id note)
   (ajax/POST "/api/update_state"
-             {:params {:user_id user_id 
+             {:params {:user_id user_id
                        :note note}
-              :format :json
-              }))
+              :format :json})
+  db)
 
 (rf/reg-event-db :save-click update-state!)
 
 (defn save-note-button []
   [:input {:type "button"
            :value "save"
-           :on-click (fn [event] (rf/dispatch [:save-click]))}])
+           :on-click (fn [event]
+                       (rf/dispatch [:save-click]))}])
 
 ;;########################################################
 
-(def timetypes (r/atom nil))
+(defn set-types! 
+  [response]
+  (rf/dispatch [:set-time-types response]))
 
-(defn set-types! [response]
-  (reset! timetypes response))
+(rf/reg-sub
+ :time-types
+ (fn [db _] (:time-types db)))
 
 (defn get_types []
+  (println "getting types")
   (ajax/GET "/api/get_types" {:handler set-types!
                               :response-format :json
                               :keywords? true}))
@@ -70,15 +75,15 @@
 
 (defn mainpanel []
   (get_types)
-  (let [user_id (rf/subscribe [:user_id])]
+
+  (let [user-id (rf/subscribe [:user_id])
+        time-types (rf/subscribe [:time-types])]
     (fn[]
-      ;;(if (nil? @user_id)
-       ;; [:div "Loading..."]
         (do
-          (get-user-state @user_id)
+          (get-user-state @user-id)
           [:div
-           (time-buttons @timetypes)
-           [note-text-box]
+          (time-buttons @time-types)
+          [note-text-box]
            [save-note-button]
 ;;           ])))))
            ]))))

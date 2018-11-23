@@ -57,12 +57,11 @@
   [{:keys [timetype description] :as db} _]
   (if (string/blank? timetype )
     (error)
-    (do
-      (ajax/POST "/api/add_type"
-        {:params {:timetype timetype
+    (ajax/POST "/api/add_type"
+      {:params {:timetype timetype
                 :description description}
-         :format :json
-         :handler get-types})))
+       :format :json
+       :handler get-types}))
   db)
 
 (rf/reg-event-db :add-type-click handle-add-type)

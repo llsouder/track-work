@@ -41,14 +41,11 @@
           (create-timetype! timetype)
           (ok timetype)))
 
-(POST "/update_state" []
+   (POST "/update_state" []
       :return UserState
       :body [userstate UserState]
       :summary "This will update the user's current state."
       (do
-        (println userstate)
+        (db/update-user-state!
+         (merge {:click_time nil} userstate))
         (ok userstate)))))
-
-;;(def state (track-work.db.core/get-user-state {:user_id 100}))
-;;(println state)
-;;(track-work.db.core/update-user-state! (update state :note #(str "more " %1)))

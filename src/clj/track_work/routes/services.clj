@@ -12,6 +12,16 @@
                         (s/optional-key :click_time) s/Int
                         :note String})
 
+(s/defschema Project {:user_id s/Int
+                      :proj_desc String})
+
+(s/defschema Task {:prog_id s/Int
+                   :task_desc String})
+
+(s/defschema Bubble {:task_id s/Int})
+
+;;TODO desc_text is better than 
+
 (defn create-timetype! [timetype]
   (db/create-timetype! {:time_type (:timetype timetype)
                         :description (:description timetype)}))
@@ -36,7 +46,7 @@
    (POST "/add_type" []
          :return TimeType
          :body [timetype TimeType]
-         :summary "This is suppose to add a new time type."
+         :summary "Add a new time type."
          (do
           (create-timetype! timetype)
           (ok timetype)))
@@ -44,8 +54,49 @@
    (POST "/update_state" []
       :return UserState
       :body [userstate UserState]
-      :summary "This will update the user's current state."
+      :summary "Update the user's current state."
       (do
         (db/update-user-state!
          (merge {:click_time nil} userstate))
-        (ok userstate)))))
+        (ok userstate)))
+
+   (GET "/get_projects/:id" []
+        :path-params [id :- Long]
+        (let [projects (db/get-projects {:user_id id})]
+          (ok projects)))
+
+   (POST "/add_project" []
+         :return Project
+         :body [project Project]
+         :summary "Add a new project."
+         (do
+           (db/create-project! project)
+           (ok project)))
+
+   (GET "/get_tasks/:id" []
+        :path-params [id :- Long]
+        (let [tasks (db/get-tasks {:proj_id id})]
+          (ok tasks)))
+
+   (POST "/add_task" []
+         :return Task
+         :body [task Task]
+         :summary "Add a new task."
+         (do
+           (db/create-task! task)
+           (ok task)))
+
+   (GET "/get_bubbles/:id" []
+        :path-params [id :- Long]
+        (let [bubbles (db/get-bubbles {:task_id id})]
+          (ok bubbles)))
+
+   (POST "/add_bubble" []
+         :return Bubble
+         :body [bubble Bubble]
+         :summary "Add a new bubble."
+         (do
+           (db/create-task! bubble)
+           (ok bubble)))
+
+   ))

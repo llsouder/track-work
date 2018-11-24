@@ -71,7 +71,7 @@ VALUES (:proj_id, :task_desc)
 
 -- :name get-bubbles :? :*
 -- :doc get all of the bubbles for a task
-SELECT * FROM bubbles
+SELECT task_id FROM bubbles
 WHERE task_id = :task_id
 
 -- :name create-bubble! :! :*

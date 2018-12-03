@@ -7,3 +7,10 @@ nav {
     margin-bottom: 20px;
 }
 
+.bubble-row {
+    border: 3px solid green;
+}
+.bubble-spacer {
+    width:10px;
+    float: right;
+}

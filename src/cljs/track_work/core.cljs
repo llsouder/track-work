@@ -8,7 +8,7 @@
             [track-work.ajax :as ajax]
             [track-work.events]
             [track-work.logtime :as logtime]
-            [track-work.bubble :as bubble]
+            [track-work.project :as project]
             [track-work.timetypes :as timetypes]
             [secretary.core :as secretary])
   (:import goog.History))
@@ -52,7 +52,7 @@
 
 (defn home-page []
   [:div.container
-   [bubble/mainpanel]])
+   [project/page]])
 
 (def pages
   {:home #'home-page

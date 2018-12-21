@@ -14,7 +14,7 @@
     (assoc db :docs docs)))
 
 (rf/reg-event-db
- :set-user-id
+ :set-user_id
  (fn [db [_ user_id]]
    (assoc db :user_id user_id)))
 
@@ -56,3 +56,13 @@
  :user_id
  (fn [db _]
    (:user_id db)))
+
+(rf/reg-event-db
+ :set-proj_id
+ (fn [db [_ proj_id]]
+   (assoc db :proj_id proj_id)))
+
+(rf/reg-sub
+ :proj_id
+ (fn [db _]
+   (:proj_id db)))

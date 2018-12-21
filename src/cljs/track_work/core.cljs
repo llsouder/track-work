@@ -7,8 +7,9 @@
             [markdown.core :refer [md->html]]
             [track-work.ajax :as ajax]
             [track-work.events]
-            [track-work.logtime :as logtime]
+            ;;[track-work.logtime :as logtime]
             [track-work.project :as project]
+            [track-work.task :as task]
             [track-work.timetypes :as timetypes]
             [secretary.core :as secretary])
   (:import goog.History))
@@ -52,7 +53,10 @@
 
 (defn home-page []
   [:div.container
-   [project/page]])
+   [:h1 "hello"]
+   [project/component]
+   [task/component]
+   ])
 
 (def pages
   {:home #'home-page
@@ -97,7 +101,8 @@
 
 (defn init! []
   (rf/dispatch-sync [:navigate :home])
-  (rf/dispatch-sync [:set-user-id 1])
+  (rf/dispatch-sync [:set-user_id 1])
+  ;;(rf/dispatch-sync [:set-proj_id 1])
   (rf/dispatch-sync [:set-time-types [{0 "no ready"}]])
   (ajax/load-interceptors!)
   (rf/dispatch [:fetch-docs])

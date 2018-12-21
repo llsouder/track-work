@@ -66,7 +66,8 @@
 (defn make-row
   [project]
    [:tr {:key (:id project)}
-    [:td (:id project)]
+    [:td [:input {:type :button
+                  :on-click #(rf/dispatch [:set-proj_id (:id project)])}]]
     [:td (:proj_desc project)]])
 
 (rf/reg-sub
@@ -84,7 +85,7 @@
       [:th "Id"] [:th "Project"]]
       (map make-row @projects)]])))
 
-(defn page []
+(defn component []
   [:div.project-data
    [type-form]
    [list-projects]])

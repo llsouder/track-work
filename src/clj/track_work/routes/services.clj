@@ -15,7 +15,7 @@
 (s/defschema Project {:user_id s/Int
                       :proj_desc String})
 
-(s/defschema Task {:prog_id s/Int
+(s/defschema Task {:proj_id s/Int
                    :task_desc String})
 
 (s/defschema Bubble {:task_id s/Int})

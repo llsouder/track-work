@@ -66,3 +66,13 @@
  :proj_id
  (fn [db _]
    (:proj_id db)))
+
+(rf/reg-event-db
+ :set-proj_desc
+ (fn [db [_ proj_desc]]
+   (assoc db :proj_desc proj_desc)))
+
+(rf/reg-sub
+ :proj_desc
+ (fn [db _]
+   (:proj_desc db)))

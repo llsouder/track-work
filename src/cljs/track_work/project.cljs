@@ -14,15 +14,9 @@
  :project
  (fn [db _] (:project db)))
 
-(defn error []
-  (js/alert "error"))
-
-(defn add-project  [description]
-  (js/alert (str "adding " description)))
-
 (defn type-form []
   (let [value (rf/subscribe [:project])]
-  [:div
+  [:div.project-form
    [:form {:id "projecttypeform"}
     "Project:" [:br]
     [:input {:id "project"
@@ -32,7 +26,7 @@
              :on-change #(rf/dispatch
                  [:change-project (-> % .-target .-value)])}][:br]
 
-    [:input {:value "submit"
+    [:input {:value "Add"
              :type "button"
              :on-click (fn [event] (rf/dispatch [:add-project-click]))}][:br]]]))
 
@@ -52,7 +46,7 @@
 (defn handle-add-project
   [{:keys [project user_id] :as db} _]
   (if (string/blank? project )
-    (error)
+    (js/alert "Project cannot be blank.")
     (ajax/POST "/api/add_project"
       {:params {:user_id  user_id
                 :proj_desc project}
@@ -66,9 +60,15 @@
 (defn make-row
   [project]
    [:tr {:key (:id project)}
-    [:td [:input {:type :button
-                  :on-click #(rf/dispatch [:set-proj_id (:id project)])}]]
-    [:td (:proj_desc project)]])
+    [:td [:input {:type :href
+                  :value (:proj_desc project)
+                  :data-toggle "collapse"
+                  :data-target "#projects"
+                  :on-click #(do
+                               (rf/dispatch
+                                [:set-proj_desc (:proj_desc project)])
+                               (rf/dispatch
+                                [:set-proj_id (:id project)]))}]]])
 
 (rf/reg-sub
  :projects
@@ -81,11 +81,19 @@
   (fn []
    [:table {:border "1"}
     [:tbody
-     [:tr
-      [:th "Id"] [:th "Project"]]
       (map make-row @projects)]])))
 
 (defn component []
-  [:div.project-data
-   [type-form]
-   [list-projects]])
+  [:div
+   [:input {:class "btn btn-primary"
+            :type :href
+            :value "Projects"
+            :data-toggle "collapse"
+            :data-target "#projects"}]
+   [:div.collapse {:id "projects"}
+   [list-projects]]])
+
+(defn page []
+  [:div.project-page
+   [list-projects]
+   [type-form]])

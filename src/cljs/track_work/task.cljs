@@ -14,17 +14,11 @@
  :task
  (fn [db _] (:task db)))
 
-(defn error []
-  (js/alert "error"))
-
-(defn add-task  [description]
-  (js/alert (str "adding " description)))
-
-(defn type-form []
+(defn task-form []
   (let [value (rf/subscribe [:task])]
-  [:div
+  [:div.task-form
    [:form {:id "task"}
-    "task:" [:br]
+    "Add task:" [:br]
     [:input {:id "task"
              :value @value
              :name "task"
@@ -32,34 +26,37 @@
              :on-change #(rf/dispatch
                  [:change-task (-> % .-target .-value)])}][:br]
 
-    [:input {:value "submit"
+    [:input {:value "Add"
              :type "button"
              :on-click (fn [event] (rf/dispatch [:add-task-click]))}][:br]]]))
 
 
 (defn update-task
   [db [_ tasks]]
-  (println "task:" tasks)
   (assoc db :tasks tasks))
 
 (rf/reg-event-db :update-task update-task)
 
 (defn get-tasks [id]
-  (ajax/GET (str "/api/get_tasks/" id)
+  (if (nil? id)
+    (println "move on id was nil")
+    (ajax/GET (str "/api/get_tasks/" id)
             {:handler #(rf/dispatch [:update-task %1])
              :response-format :json
-             :keywords? true}))
+             :keywords? true})))
 
 (defn handle-add-task
-  [{:keys [task project_id] :as db} _]
+  [{:keys [task proj_id] :as db} _]
   (if (string/blank? task )
-    (error)
+    (js/alert "Task cannot be blank.")
     (ajax/POST "/api/add_task"
-      {:params {:proj_id  project_id
+      {:params {:proj_id  proj_id
                 :task_desc task}
        :format :json
+       :error #(js/alert (str "Task not added, proj_id:" proj_id ))
        :handler #(do (rf/dispatch [:change-task ""])
-                     (get-tasks project_id))}))
+                     (println "posting task:")
+                     (get-tasks proj_id))}))
   db)
 
 (rf/reg-event-db :add-task-click handle-add-task)
@@ -74,20 +71,29 @@
  :tasks
  (fn [db _] (:tasks db)))
 
+
 (defn list-task []
   (let [proj_id (rf/subscribe [:proj_id])
+        proj_desc (rf/subscribe [:proj_desc])
         tasks (rf/subscribe [:tasks])]
   (fn []
     (get-tasks @proj_id)
+    [:div
+    [:h4 (if (nil? @proj_desc)
+           "no project choosen"
+           @proj_desc)]
    [:table {:border "1"}
     [:tbody
      [:tr
       [:th "Id"] [:th "task"]]
-      (map make-row @tasks)]])))
+     (map make-row @tasks)]]])))
 
 (defn component []
   [:div.task-data
-   [type-form]
-   [list-task]])
+   [list-task]
+   [task-form]])
 
-;;doodles
+(defn page []
+  [:div.task-data
+   [list-task]
+   [task-form]])

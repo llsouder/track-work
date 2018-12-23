@@ -7,10 +7,8 @@
             [markdown.core :refer [md->html]]
             [track-work.ajax :as ajax]
             [track-work.events]
-            ;;[track-work.logtime :as logtime]
             [track-work.project :as project]
             [track-work.task :as task]
-            [track-work.timetypes :as timetypes]
             [secretary.core :as secretary])
   (:import goog.History))
 
@@ -37,13 +35,8 @@
      [b/Collapse {:is-open @expanded? :navbar true}
       [b/Nav {:class-name "mr-auto" :navbar true}
        [nav-link "#/" "Home" :home]
-       [nav-link "#/types" "Time Types" :types]
+       [nav-link "#/projects" "Projects" :projects]
        [nav-link "#/about" "About" :about]]]]))
-
-(defn types-page []
-  [:div.container
-   [:div.row>div.col-sm-12
-    (timetypes/page)]])
 
 (defn about-page []
   [:div.container
@@ -53,14 +46,21 @@
 
 (defn home-page []
   [:div.container
-   [:h1 "hello"]
    [project/component]
-   [task/component]
-   ])
+   [task/component]])
+
+(defn projects-page []
+  [:div.container
+   [project/page]])
+
+(defn task-page []
+  [:div.container
+   [task/page]])
 
 (def pages
   {:home #'home-page
-   :types #'types-page
+   :projects #'projects-page
+   :task #'task-page
    :about #'about-page})
 
 (defn page []
@@ -76,8 +76,11 @@
 (secretary/defroute "/" []
   (rf/dispatch [:navigate :home]))
 
-(secretary/defroute "/types" []
-  (rf/dispatch [:navigate :types]))
+(secretary/defroute "/projects" []
+  (rf/dispatch [:navigate :projects]))
+
+(secretary/defroute "/task" []
+  (rf/dispatch [:navigate :task]))
 
 (secretary/defroute "/about" []
   (rf/dispatch [:navigate :about]))
@@ -102,8 +105,6 @@
 (defn init! []
   (rf/dispatch-sync [:navigate :home])
   (rf/dispatch-sync [:set-user_id 1])
-  ;;(rf/dispatch-sync [:set-proj_id 1])
-  (rf/dispatch-sync [:set-time-types [{0 "no ready"}]])
   (ajax/load-interceptors!)
   (rf/dispatch [:fetch-docs])
   (hook-browser-navigation!)

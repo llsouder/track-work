@@ -2,6 +2,7 @@
   (:require [ajax.core :as ajax]
             [re-frame.core :as rf]
             [clojure.string :as string]
+            [track-work.bubble :as bubble]
             [reagent.core :as r]))
 
 (defn handle-change-task
@@ -66,9 +67,10 @@
 (rf/reg-event-db :add-task-click handle-add-task)
 
 (defn make-row
-  [task]
-  [:tr {:key (:id task)}
-   [:td (:task_desc task)]])
+  [{:keys [id task_desc] :as task}]
+  [:tr {:key id}
+   [:td task_desc]
+   [:td (bubble/one-hour id)]])
 
 (rf/reg-sub
  :tasks
@@ -84,14 +86,29 @@
        [:h4 (if (nil? @proj_desc)
               "no project selected"
               @proj_desc)]
-       [:table {:border "1"}
+       [:table.table 
+        [:tbody
+         (map make-row @tasks)]]])))
+
+(defn dropdown-task []
+  (let [proj_id (rf/subscribe [:proj_id])
+        proj_desc (rf/subscribe [:proj_desc])
+        tasks (rf/subscribe [:tasks])]
+    (fn []
+      (get-tasks @proj_id)
+      [:div
+       [:h4 (if (nil? @proj_desc)
+              "no project selected"
+              @proj_desc)]
+       [:table.table 
         [:tbody
          (map make-row @tasks)]]])))
 
 (defn component []
   [:div.task-component
    [list-task]
-   [task-form]]) 
+   [task-form]])
+
 (defn page []
   [:div.task-page
    [list-task]

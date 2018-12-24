@@ -62,18 +62,19 @@
 
 (rf/reg-event-db :add-project-click handle-add-project)
 
+(defn set-current-project
+  [{:keys [id proj_desc]}]
+  (do
+    (rf/dispatch [:set-proj_desc proj_desc])
+    (rf/dispatch [:set-proj_id id])))
+
 (defn make-row
   [project]
    [:tr {:key (:id project)}
-    [:td [:input {:type :href
-                  :value (:proj_desc project)
-                  :data-toggle "collapse"
+    [:td [:div {:data-toggle "collapse"
                   :data-target "#projects"
-                  :on-click #(do
-                               (rf/dispatch
-                                [:set-proj_desc (:proj_desc project)])
-                               (rf/dispatch
-                                [:set-proj_id (:id project)]))}]]])
+                  :on-click #(set-current-project project)}
+          (:proj_desc project)]]])
 
 (rf/reg-sub
  :projects
@@ -84,7 +85,7 @@
         projects (rf/subscribe [:projects])]
   (get-projects @user_id)
   (fn []
-   [:table {:border "1"}
+   [:table.table {:border "1"}
     [:tbody
       (map make-row @projects)]])))
 

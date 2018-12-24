@@ -96,7 +96,15 @@
          :body [bubble Bubble]
          :summary "Add a new bubble."
          (do
-           (db/create-task! bubble)
+           (db/create-bubble! bubble)
+           (ok bubble)))
+
+   (POST "/remove_bubble" []
+         :return Bubble
+         :body [bubble Bubble]
+         :summary "Remove a new bubble."
+         (do
+           (db/remove-bubble! bubble)
            (ok bubble)))
 
    ))

@@ -60,7 +60,8 @@ VALUES (:user_id, :proj_desc)
 
 -- :name get-tasks :? :*
 -- :doc get all of the tasks for a project
-SELECT * FROM tasks
+SELECT tasks.id, tasks.task_desc, coalesce(to_char(bubbles.bubble, 'MM')) as bubble
+FROM tasks LEFT OUTER JOIN bubbles ON (tasks.id = bubbles.task_id)
 WHERE proj_id = :proj_id
 
 -- :name create-task! :! :n
@@ -79,3 +80,12 @@ WHERE task_id = :task_id
 INSERT INTO bubbles
 (task_id)
 VALUES (:task_id)
+
+-- :name remove-bubble! :! :*
+-- :doc removes a new task record
+DELETE FROM bubbles
+  WHERE id = any
+    (array
+      (select id from bubbles
+       where task_id = :task_id limit 1))
+

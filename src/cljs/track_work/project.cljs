@@ -14,21 +14,26 @@
  :project
  (fn [db _] (:project db)))
 
-(defn type-form []
-  (let [value (rf/subscribe [:project])]
+(defn project-form []
+  (let [value (rf/subscribe [:project])
+       proj_error (rf/subscribe [:proj_error])]
   [:div.project-form
-   [:form {:id "projecttypeform"}
-    "Project:" [:br]
+   [:form {:id "projectform"}
     [:input {:id "project"
              :value @value
+             :on-click #(rf/dispatch [:set-proj_error nil])
              :name "project"
+             :placeholder "Add a new project"
              :type "text"
              :on-change #(rf/dispatch
-                 [:change-project (-> % .-target .-value)])}][:br]
+                 [:change-project (-> % .-target .-value)])}]
 
     [:input {:value "Add"
              :type "button"
-             :on-click (fn [event] (rf/dispatch [:add-project-click]))}][:br]]]))
+             :on-click (fn [event]
+                         (rf/dispatch [:add-project-click]))}]]
+   (if @proj_error
+     [:div.alert.alert-danger  @proj_error])]))
 
 
 (defn update-projects
@@ -46,7 +51,7 @@
 (defn handle-add-project
   [{:keys [project user_id] :as db} _]
   (if (string/blank? project )
-    (js/alert "Project cannot be blank.")
+    (rf/dispatch [:set-proj_error "Project cannot be blank."])
     (ajax/POST "/api/add_project"
       {:params {:user_id  user_id
                 :proj_desc project}
@@ -96,4 +101,14 @@
 (defn page []
   [:div.project-page
    [list-projects]
-   [type-form]])
+   [project-form]])
+
+(rf/reg-event-db
+ :set-proj_error
+ (fn [db [_ proj_error]]
+   (assoc db :proj_error proj_error)))
+
+(rf/reg-sub
+ :proj_error
+ (fn [db _]
+   (:proj_error db)))

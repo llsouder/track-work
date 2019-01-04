@@ -70,11 +70,9 @@
 
 (defn make-row
   [project]
-   [:tr {:key (:id project)}
-    [:td [:div {:data-toggle "collapse"
-                  :data-target "#projects"
-                  :on-click #(set-current-project project)}
-          (:proj_desc project)]]])
+  [:button.btn.btn-info {:class "nav-item" :on-click #(set-current-project project)
+        :key (:id project)}
+    [:a (:proj_desc project)]])
 
 (rf/reg-sub
  :projects
@@ -85,19 +83,16 @@
         projects (rf/subscribe [:projects])]
   (get-projects @user_id)
   (fn []
-   [:table.table {:border "1"}
-    [:tbody
-      (map make-row @projects)]])))
+    [:ul {:class "navbar-nav mr-auto"}
+     (map make-row @projects)
+     [project-form]])))
 
 (defn component []
-  [:div
-   [:input {:class "btn btn-primary"
-            :type :href
-            :value "Projects"
-            :data-toggle "collapse"
-            :data-target "#projects"}]
-   [:div.collapse {:id "projects"}
-   [list-projects]]])
+  [:nav.navbar.navbar-light.bg.light {:id "sidebar" }
+   [:div {:class "container-fluid"}
+    [:div {:class "navbar-header"}
+     [:a {:class "navbar-brand" :href "#"}]]
+    [list-projects]]])
 
 (defn page []
   [:div.project-page

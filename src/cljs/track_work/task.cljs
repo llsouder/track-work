@@ -73,7 +73,7 @@
            (map #(make-row %1) @tasks)]]])))
 
 (defn component []
-  [:div.task-component
+  [:div.task-component {:id="content"}
    [list-task]
    [task-form]])
 

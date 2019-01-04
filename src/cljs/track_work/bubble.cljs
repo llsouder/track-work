@@ -2,10 +2,13 @@
   (:require [ajax.core :as ajax]
             [re-frame.core :as rf]))
 
-(defn get-bubbles [id]
-  (if id
-    (ajax/GET (str "/api/get_bubbles/" id
-                   {:handler #(rf/dispatch :set-bubble-map [[id %1]])}))))
+;;Bubble
+;;Why bubble?
+;;the gui has checkboxes which I called bubbles
+;;because I could not think of a good name.
+;;I am keeping the name until think of something
+;;better.  Currently I am calling the same data
+;;in postgres under the column qtr_hr."
 
 (defn add-bubble [id get-task-fn]
   (ajax/POST "/api/add_bubble"
@@ -27,6 +30,7 @@
   (-> event .-target .-checked))
 
 (defn toggle-bubble
+  "it means add or remove qtr_hr in the task."
   [event task_id get-task-fn]
   (if (check-bubble event)
     (add-bubble task_id get-task-fn)
@@ -40,10 +44,3 @@
               :checked (< n checks)
               :on-click #(toggle-bubble %1 task_id get-tasks-fn)}])
    (range 8)))
-
-(defn mainpanel []
-  [:div "Bubbles" ])
-
-(rf/reg-event-db
- :set-bubble-map
- (fn [db [_ bubbles_from_db]]))

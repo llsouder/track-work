@@ -51,24 +51,12 @@
 
 (rf/reg-event-db :add-task-click handle-add-task)
 
-(defn extract-from
-  [id tasks]
-  (let [bubbles (vec (filter #(= id (:id %1)) tasks))
-        final ((comp vec flatten conj) bubbles (repeat 8 {}))
-        nomore (take 8 final)]
-    (take 8 ((comp vec flatten conj) bubbles (repeat 8 {})))))
-
-(defn just-the-tasks
-  [tasks]
-  (distinct (map #(dissoc %1 :bubble) tasks)))
-
 (defn make-row
-  [task tasks]
-  (let [{:keys [id task_desc]} task
-        bubbles (extract-from id tasks)]
+  [task]
+  (let [{:keys [id task_desc qtr_hr]} task]
     [:tr {:key id}
      [:td task_desc]
-     [:td (bubble/make-bubbles id bubbles get-tasks)]]))
+     [:td (bubble/make-bubbles id qtr_hr get-tasks)]]))
 
 (defn list-task []
   (let [proj_id (rf/subscribe [:proj_id])
@@ -76,14 +64,13 @@
         tasks (rf/subscribe [:tasks])]
     (fn []
       (get-tasks @proj_id)
-      (let [task-list (just-the-tasks @tasks)]
         [:div
          [:h4 (if (nil? @proj_desc)
                 "No project selected."
                 @proj_desc)]
          [:table.table 
           [:tbody
-           (map #(make-row %1 @tasks) task-list)]]]))))
+           (map #(make-row %1) @tasks)]]])))
 
 (defn component []
   [:div.task-component

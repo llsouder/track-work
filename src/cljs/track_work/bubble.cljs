@@ -37,10 +37,9 @@
    (fn [n check]
      [:input {:id (str task_id "-" n)
               :type "checkbox"
-              :checked (not-empty check)
+              :checked (< n checks)
               :on-click #(toggle-bubble %1 task_id get-tasks-fn)}])
-   (range (count checks))
-   checks))
+   (range 8)))
 
 (defn mainpanel []
   [:div "Bubbles" ])

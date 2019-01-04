@@ -60,32 +60,24 @@ VALUES (:user_id, :proj_desc)
 
 -- :name get-tasks :? :*
 -- :doc get all of the tasks for a project
-SELECT tasks.id, tasks.task_desc, coalesce(to_char(bubbles.bubble, 'MM')) as bubble
-FROM tasks LEFT OUTER JOIN bubbles ON (tasks.id = bubbles.task_id)
+SELECT id, task_desc, qtr_hr
+FROM tasks
 WHERE proj_id = :proj_id
-
+ 
 -- :name create-task! :! :n
 -- :doc creates a new task record
 INSERT INTO tasks
 (proj_id, task_desc)
 VALUES (:proj_id, :task_desc)
 
--- :name get-bubbles :? :*
--- :doc get all of the bubbles for a task
-SELECT task_id FROM bubbles
-WHERE task_id = :task_id
+-- :name create-bubble! :! :n
+-- :doc add one 15 min to the task record
+UPDATE tasks
+  SET qtr_hr = qtr_hr + 1
+WHERE id = :task_id
 
--- :name create-bubble! :! :*
--- :doc creates a new task record
-INSERT INTO bubbles
-(task_id)
-VALUES (:task_id)
-
--- :name remove-bubble! :! :*
--- :doc removes a new task record
-DELETE FROM bubbles
-  WHERE id = any
-    (array
-      (select id from bubbles
-       where task_id = :task_id limit 1))
-
+-- :name remove-bubble! :! :n
+-- :doc add one 15 min to the task record
+UPDATE tasks
+SET qtr_hr = qtr_hr - 1
+WHERE id = :task_id

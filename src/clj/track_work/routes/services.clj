@@ -86,11 +86,6 @@
            (db/create-task! task)
            (ok task)))
 
-   (GET "/get_bubbles/:id" []
-        :path-params [id :- Long]
-        (let [bubbles (db/get-bubbles {:task_id id})]
-          (ok bubbles)))
-
    (POST "/add_bubble" []
          :return Bubble
          :body [bubble Bubble]
